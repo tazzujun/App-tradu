@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dicionário Inglês-Português</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      padding: 25px;
+      background: #f3f7fb;
+    }
+
+    .app {
+      max-width: 420px;
+      margin: auto;
+      background: white;
+      padding: 25px;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+    }
+
+    h1 {
+      font-size: 24px;
+      text-align: center;
+      color: #1f4e79;
+    }
+
+    input {
+      width: 100%;
+      padding: 15px;
+      font-size: 18px;
+      border-radius: 12px;
+      border: 1px solid #ccc;
+      margin-top: 20px;
+      box-sizing: border-box;
+    }
+
+    button {
+      width: 100%;
+      padding: 15px;
+      margin-top: 15px;
+      border: none;
+      border-radius: 12px;
+      background: #2d8dcb;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+    }
+
+    .resultado {
+      margin-top: 25px;
+      padding: 18px;
+      background: #eef7ff;
+      border-radius: 12px;
+      font-size: 20px;
+      text-align: center;
+      color: #222;
+      min-height: 30px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app">
+    <h1>Dicionário Inglês-Português</h1>
+
+    <input id="palavra" type="text" placeholder="Digite uma palavra em inglês">
+
+    <button onclick="traduzir()">Traduzir</button>
+
+    <div class="resultado" id="resultado">
+      A tradução aparecerá aqui
+    </div>
+  </div>
+
+  <script>
+    async function traduzir() {
+      const palavra = document.getElementById("palavra").value.trim();
+      const resultado = document.getElementById("resultado");
+
+      if (!palavra) {
+        resultado.innerText = "Digite uma palavra.";
+        return;
+      }
+
+      resultado.innerText = "Traduzindo...";
+
+      try {
+        const resposta = await fetch("https://libretranslate.com/translate", {
+          method: "POST",
+          body: JSON.stringify({
+            q: palavra,
+            source: "en",
+            target: "pt",
+            format: "text"
+          }),
+          headers: {
+            "Content-Type": "application/json"
+          }
+        });
+
+        const dados = await resposta.json();
+
+        resultado.innerText = dados.translatedText || "Não foi possível traduzir.";
+      } catch (erro) {
+        resultado.innerText = "Erro ao conectar com a API.";
+      }
+    }
+  </script>
+
+</body>
+</html>
