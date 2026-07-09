@@ -4,39 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>English Dictionary</title>
-
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial,Helvetica,sans-serif}
-body{background:#0b0b0b;display:flex;justify-content:center;align-items:center;min-height:100vh;padding:20px}
-.app{width:100%;max-width:430px;background:#171717;border-radius:25px;padding:30px;box-shadow:0 20px 60px rgba(0,0,0,.6);border:1px solid #2c2c2c}
-.logo{text-align:center;color:#FFD54A;font-size:34px;font-weight:bold;letter-spacing:2px}
-.sub{text-align:center;color:#888;margin-top:8px;margin-bottom:35px}
-input{width:100%;padding:18px;background:#111;border:1px solid #333;color:white;font-size:18px;border-radius:15px;outline:none}
-input:focus{border:1px solid #FFD54A}
-button{width:100%;margin-top:18px;padding:18px;border:none;border-radius:15px;background:#FFD54A;color:#111;font-size:18px;font-weight:bold}
-.resultado{margin-top:25px;background:#111;border:1px solid #333;border-radius:15px;padding:25px;color:white;font-size:22px;text-align:center;min-height:80px;display:flex;align-items:center;justify-content:center}
-footer{text-align:center;color:#555;margin-top:25px;font-size:13px}
+*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
+body{background:#0b0b0b;color:white;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
+.app{width:100%;max-width:430px;background:#171717;border-radius:25px;padding:30px;border:1px solid #333}
+.logo{text-align:center;color:#FFD54A;font-size:32px;font-weight:bold}
+.sub{text-align:center;color:#888;margin:10px 0 30px}
+input,button{width:100%;padding:18px;border-radius:15px;font-size:18px}
+input{background:#111;border:1px solid #333;color:white}
+button{margin-top:15px;background:#FFD54A;color:#111;border:none;font-weight:bold}
+.resultado{margin-top:25px;background:#111;border:1px solid #333;border-radius:15px;padding:20px;line-height:1.5}
 </style>
 </head>
-
 <body>
 
 <div class="app">
   <div class="logo">ENGLISH</div>
-  <div class="sub">Dicionário Inglês → Português</div>
+  <div class="sub">Dicionário de Inglês</div>
 
   <input id="palavra" placeholder="Digite uma palavra em inglês">
-
-  <button onclick="traduzir()">TRADUZIR</button>
+  <button onclick="buscar()">BUSCAR</button>
 
   <div class="resultado" id="resultado">Digite uma palavra...</div>
-
-  <footer>English Dictionary</footer>
 </div>
 
 <script>
-async function traduzir(){
-  const palavra = document.getElementById("palavra").value.trim();
+async function buscar(){
+  const palavra = document.getElementById("palavra").value.trim().toLowerCase();
   const resultado = document.getElementById("resultado");
 
   if(!palavra){
@@ -44,24 +38,36 @@ async function traduzir(){
     return;
   }
 
-  resultado.innerHTML = "Traduzindo...";
+  resultado.innerHTML = "Buscando...";
 
   try{
-    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(palavra)}&langpair=en|pt-BR`;
-
+    const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${palavra}`;
     const resposta = await fetch(url);
     const dados = await resposta.json();
 
-    resultado.innerHTML = dados.responseData.translatedText || "Não foi possível traduzir.";
+    if(!Array.isArray(dados)){
+      resultado.innerHTML = "Palavra não encontrada.";
+      return;
+    }
+
+    const item = dados[0];
+    const significado = item.meanings[0].definitions[0].definition;
+    const exemplo = item.meanings[0].definitions[0].example || "Sem exemplo disponível.";
+    const audio = item.phonetics.find(p => p.audio)?.audio;
+
+    resultado.innerHTML = `
+      <strong>Palavra:</strong> ${item.word}<br><br>
+      <strong>Significado em inglês:</strong><br>${significado}<br><br>
+      <strong>Exemplo:</strong><br>${exemplo}<br><br>
+      ${audio ? `<button onclick="new Audio('${audio}').play()">OUVIR PRONÚNCIA</button>` : ""}
+    `;
   }catch(e){
-    resultado.innerHTML = "Erro ao conectar à API.";
+    resultado.innerHTML = "Erro ao buscar a palavra.";
   }
 }
 
-document.getElementById("palavra").addEventListener("keypress", function(e){
-  if(e.key === "Enter"){
-    traduzir();
-  }
+document.getElementById("palavra").addEventListener("keypress",function(e){
+  if(e.key==="Enter") buscar();
 });
 </script>
 
