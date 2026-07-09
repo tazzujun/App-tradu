@@ -1,113 +1,276 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dicionário Inglês-Português</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      padding: 25px;
-      background: #f3f7fb;
-    }
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    .app {
-      max-width: 420px;
-      margin: auto;
-      background: white;
-      padding: 25px;
-      border-radius: 18px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
-    }
+<title>English Dictionary</title>
 
-    h1 {
-      font-size: 24px;
-      text-align: center;
-      color: #1f4e79;
-    }
+<style>
 
-    input {
-      width: 100%;
-      padding: 15px;
-      font-size: 18px;
-      border-radius: 12px;
-      border: 1px solid #ccc;
-      margin-top: 20px;
-      box-sizing: border-box;
-    }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
 
-    button {
-      width: 100%;
-      padding: 15px;
-      margin-top: 15px;
-      border: none;
-      border-radius: 12px;
-      background: #2d8dcb;
-      color: white;
-      font-size: 18px;
-      font-weight: bold;
-    }
+body{
+    background:#0b0b0b;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
 
-    .resultado {
-      margin-top: 25px;
-      padding: 18px;
-      background: #eef7ff;
-      border-radius: 12px;
-      font-size: 20px;
-      text-align: center;
-      color: #222;
-      min-height: 30px;
-    }
-  </style>
+.app{
+
+    width:100%;
+    max-width:430px;
+
+    background:#171717;
+
+    border-radius:25px;
+
+    padding:30px;
+
+    box-shadow:0 20px 60px rgba(0,0,0,.6);
+
+    border:1px solid #2c2c2c;
+
+}
+
+.logo{
+
+    text-align:center;
+
+    color:#FFD54A;
+
+    font-size:34px;
+
+    font-weight:bold;
+
+    letter-spacing:2px;
+
+}
+
+.sub{
+
+    text-align:center;
+
+    color:#888;
+
+    margin-top:8px;
+
+    margin-bottom:35px;
+
+}
+
+input{
+
+    width:100%;
+
+    padding:18px;
+
+    background:#111;
+
+    border:1px solid #333;
+
+    color:white;
+
+    font-size:18px;
+
+    border-radius:15px;
+
+    outline:none;
+
+}
+
+input:focus{
+
+    border:1px solid #FFD54A;
+
+}
+
+button{
+
+    width:100%;
+
+    margin-top:18px;
+
+    padding:18px;
+
+    border:none;
+
+    border-radius:15px;
+
+    background:#FFD54A;
+
+    color:#111;
+
+    font-size:18px;
+
+    font-weight:bold;
+
+    cursor:pointer;
+
+    transition:.2s;
+
+}
+
+button:hover{
+
+    transform:scale(1.02);
+
+}
+
+.resultado{
+
+    margin-top:25px;
+
+    background:#111;
+
+    border:1px solid #333;
+
+    border-radius:15px;
+
+    padding:25px;
+
+    color:white;
+
+    font-size:22px;
+
+    text-align:center;
+
+    min-height:80px;
+
+    display:flex;
+
+    align-items:center;
+
+    justify-content:center;
+
+}
+
+footer{
+
+    text-align:center;
+
+    color:#555;
+
+    margin-top:25px;
+
+    font-size:13px;
+
+}
+
+</style>
+
 </head>
+
 <body>
 
-  <div class="app">
-    <h1>Dicionário Inglês-Português</h1>
+<div class="app">
 
-    <input id="palavra" type="text" placeholder="Digite uma palavra em inglês">
+<div class="logo">
+ENGLISH
+</div>
 
-    <button onclick="traduzir()">Traduzir</button>
+<div class="sub">
+Dicionário Inglês → Português
+</div>
 
-    <div class="resultado" id="resultado">
-      A tradução aparecerá aqui
-    </div>
-  </div>
+<input
+id="palavra"
+placeholder="Digite uma palavra em inglês">
 
-  <script>
-    async function traduzir() {
-      const palavra = document.getElementById("palavra").value.trim();
-      const resultado = document.getElementById("resultado");
+<button onclick="traduzir()">
+TRADUZIR
+</button>
 
-      if (!palavra) {
-        resultado.innerText = "Digite uma palavra.";
-        return;
-      }
+<div
+class="resultado"
+id="resultado">
 
-      resultado.innerText = "Traduzindo...";
+Digite uma palavra...
 
-      try {
-        const resposta = await fetch("https://libretranslate.com/translate", {
-          method: "POST",
-          body: JSON.stringify({
-            q: palavra,
-            source: "en",
-            target: "pt",
-            format: "text"
-          }),
-          headers: {
-            "Content-Type": "application/json"
-          }
-        });
+</div>
 
-        const dados = await resposta.json();
+<footer>
 
-        resultado.innerText = dados.translatedText || "Não foi possível traduzir.";
-      } catch (erro) {
-        resultado.innerText = "Erro ao conectar com a API.";
-      }
-    }
-  </script>
+Powered by LibreTranslate
+
+</footer>
+
+</div>
+
+<script>
+
+async function traduzir(){
+
+const palavra=document.getElementById("palavra").value.trim();
+
+const resultado=document.getElementById("resultado");
+
+if(palavra===""){
+
+resultado.innerHTML="Digite uma palavra.";
+
+return;
+
+}
+
+resultado.innerHTML="Traduzindo...";
+
+try{
+
+const resposta=await fetch("https://translate.argosopentech.com/translate",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+
+q:palavra,
+
+source:"en",
+
+target:"pt",
+
+format:"text"
+
+})
+
+});
+
+const dados=await resposta.json();
+
+resultado.innerHTML=dados.translatedText;
+
+}catch(e){
+
+resultado.innerHTML="Erro ao conectar à API.";
+
+}
+
+}
+
+document.getElementById("palavra").addEventListener("keypress",function(e){
+
+if(e.key==="Enter"){
+
+traduzir();
+
+}
+
+});
+
+</script>
 
 </body>
+
 </html>
