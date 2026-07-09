@@ -3,200 +3,266 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>English Dictionary</title>
+<title>Dicionário Mágico</title>
 
 <style>
-*{
-    margin:0;
-    padding:0;
-    box-sizing:border-box;
-    font-family:Arial,Helvetica,sans-serif;
-}
+*{margin:0;padding:0;box-sizing:border-box}
 
 body{
-    background:#0d0d0d;
-    color:#fff;
-    display:flex;
-    justify-content:center;
-    align-items:center;
-    min-height:100vh;
-    padding:20px;
+  min-height:100vh;
+  background:
+    radial-gradient(circle at top,#3b2813 0%,#120b06 35%,#050505 100%);
+  color:#f5e6b8;
+  font-family:Georgia,serif;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  padding:20px;
+  overflow:hidden;
 }
 
-.container{
-    width:100%;
-    max-width:430px;
-    background:#1a1a1a;
-    border-radius:20px;
-    padding:30px;
-    border:1px solid #333;
+body::before{
+  content:"";
+  position:fixed;
+  inset:0;
+  background-image:
+    radial-gradient(#f8d878 1px,transparent 1px),
+    radial-gradient(#ffffff 1px,transparent 1px);
+  background-size:80px 80px,120px 120px;
+  opacity:.18;
+  animation:stars 10s linear infinite;
 }
 
-h1{
-    text-align:center;
-    color:#ffd84d;
-    margin-bottom:10px;
+@keyframes stars{
+  from{transform:translateY(0)}
+  to{transform:translateY(80px)}
 }
 
-p{
-    text-align:center;
-    color:#888;
-    margin-bottom:25px;
+.app{
+  position:relative;
+  z-index:2;
+  width:100%;
+  max-width:430px;
+  background:linear-gradient(145deg,#1b1209,#090604);
+  border:2px solid #c89b3c;
+  border-radius:24px;
+  padding:30px;
+  box-shadow:
+    0 0 30px rgba(200,155,60,.35),
+    inset 0 0 25px rgba(255,215,100,.08);
+  animation:aparecer .8s ease;
+}
+
+@keyframes aparecer{
+  from{opacity:0;transform:translateY(30px) scale(.95)}
+  to{opacity:1;transform:translateY(0) scale(1)}
+}
+
+.logo{
+  text-align:center;
+  font-size:38px;
+  font-weight:bold;
+  letter-spacing:2px;
+  color:#ffd56a;
+  text-shadow:0 0 12px #c89b3c;
+}
+
+.sub{
+  text-align:center;
+  color:#bfa76a;
+  margin:10px 0 28px;
+  font-size:16px;
 }
 
 input{
-    width:100%;
-    padding:16px;
-    border-radius:12px;
-    border:1px solid #444;
-    background:#111;
-    color:white;
-    font-size:18px;
+  width:100%;
+  padding:18px;
+  border-radius:14px;
+  border:1px solid #8b6b2f;
+  background:#0c0805;
+  color:#ffe9a3;
+  font-size:18px;
+  outline:none;
+  box-shadow:inset 0 0 12px rgba(255,213,106,.08);
+}
+
+input:focus{
+  border-color:#ffd56a;
+  box-shadow:0 0 15px rgba(255,213,106,.4);
 }
 
 button{
-    width:100%;
-    margin-top:15px;
-    padding:16px;
-    border:none;
-    border-radius:12px;
-    background:#ffd84d;
-    color:#111;
-    font-size:18px;
-    font-weight:bold;
-    cursor:pointer;
+  width:100%;
+  margin-top:16px;
+  padding:17px;
+  border:none;
+  border-radius:14px;
+  background:linear-gradient(135deg,#ffd56a,#9f741f);
+  color:#1a1006;
+  font-size:18px;
+  font-weight:bold;
+  letter-spacing:1px;
+  cursor:pointer;
+  transition:.2s;
 }
 
-button:hover{
-    opacity:.9;
+button:active{
+  transform:scale(.96);
 }
 
-#resultado{
-    margin-top:25px;
-    background:#111;
-    border:1px solid #333;
-    border-radius:12px;
-    padding:20px;
-    min-height:120px;
-    line-height:1.6;
+.resultado{
+  margin-top:25px;
+  min-height:115px;
+  padding:24px;
+  border-radius:16px;
+  background:rgba(0,0,0,.45);
+  border:1px solid #6d5224;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  text-align:center;
+  font-size:24px;
+  line-height:1.35;
+  color:#fff1b8;
+  box-shadow:inset 0 0 18px rgba(255,213,106,.08);
 }
 
-small{
-    display:block;
-    margin-top:20px;
-    text-align:center;
-    color:#666;
+.sugestoes{
+  margin-top:16px;
+  text-align:center;
+}
+
+.tag{
+  display:inline-block;
+  margin:5px;
+  padding:7px 12px;
+  border-radius:20px;
+  background:#21160b;
+  border:1px solid #7c5d25;
+  color:#f5d27a;
+  font-size:14px;
+}
+
+.magic{
+  animation:glow .6s ease;
+}
+
+@keyframes glow{
+  0%{box-shadow:0 0 0 rgba(255,213,106,0)}
+  50%{box-shadow:0 0 25px rgba(255,213,106,.8)}
+  100%{box-shadow:0 0 0 rgba(255,213,106,0)}
+}
+
+.footer{
+  margin-top:20px;
+  text-align:center;
+  font-size:13px;
+  color:#7d6b43;
 }
 </style>
-
 </head>
 
 <body>
 
-<div class="container">
+<div class="app" id="card">
+  <div class="logo">SPELL WORDS</div>
+  <div class="sub">Dicionário Inglês → Português</div>
 
-<h1>English</h1>
+  <input id="palavra" placeholder="Digite uma palavra em inglês" autocomplete="off">
 
-<p>Dicionário Inglês → Português</p>
+  <button onclick="traduzir()">TRADUZIR</button>
 
-<input
-id="palavra"
-type="text"
-placeholder="Digite uma palavra">
+  <div class="resultado" id="resultado">
+    Carregando dicionário...
+  </div>
 
-<button onclick="buscar()">
-Pesquisar
-</button>
+  <div class="sugestoes" id="sugestoes"></div>
 
-<div id="resultado">
-
-Digite uma palavra.
-
-</div>
-
-<small>Powered by Free Dictionary API</small>
-
+  <div class="footer">Magic Dictionary</div>
 </div>
 
 <script>
+let dicionario = {};
 
-async function buscar(){
-
-const palavra=document.getElementById("palavra").value.trim();
-
-const resultado=document.getElementById("resultado");
-
-if(!palavra){
-
-resultado.innerHTML="Digite uma palavra.";
-
-return;
-
+async function carregar(){
+  try{
+    const resposta = await fetch("dicionario.json?v=5000");
+    dicionario = await resposta.json();
+    document.getElementById("resultado").innerHTML = "Digite uma palavra...";
+  }catch(e){
+    document.getElementById("resultado").innerHTML = "Erro ao carregar dicionário.";
+  }
 }
 
-resultado.innerHTML="Pesquisando...";
-
-try{
-
-const resposta=await fetch("https://api.dictionaryapi.dev/api/v2/entries/en/"+encodeURIComponent(palavra));
-
-if(!resposta.ok){
-
-resultado.innerHTML="Palavra não encontrada.";
-
-return;
-
+function animar(){
+  const card = document.getElementById("card");
+  card.classList.remove("magic");
+  void card.offsetWidth;
+  card.classList.add("magic");
 }
 
-const dados=await resposta.json();
+function traduzir(){
+  const palavra = document.getElementById("palavra").value.trim().toLowerCase();
+  const resultado = document.getElementById("resultado");
+  const sugestoes = document.getElementById("sugestoes");
 
-const item=dados[0];
+  sugestoes.innerHTML = "";
 
-let html="";
+  if(!palavra){
+    resultado.innerHTML = "Digite uma palavra.";
+    return;
+  }
 
-html+="<b>Palavra:</b> "+item.word+"<br><br>";
+  animar();
 
-if(item.phonetic){
+  if(dicionario[palavra]){
+    resultado.innerHTML = "<div><b>" + palavra + "</b><br><br>" + dicionario[palavra] + "</div>";
+    return;
+  }
 
-html+="<b>Pronúncia:</b> "+item.phonetic+"<br><br>";
+  const parecidas = Object.keys(dicionario)
+    .filter(p => p.startsWith(palavra))
+    .slice(0,8);
 
+  resultado.innerHTML = "Palavra não encontrada.";
+
+  if(parecidas.length){
+    sugestoes.innerHTML = "Sugestões:<br>" + parecidas.map(p =>
+      "<span class='tag' onclick=\"usarSugestao('" + p + "')\">" + p + "</span>"
+    ).join("");
+  }
 }
 
-item.meanings.forEach(function(m){
-
-html+="<b>"+m.partOfSpeech+"</b><br>";
-
-m.definitions.slice(0,2).forEach(function(d){
-
-html+="• "+d.definition+"<br>";
-
-});
-
-html+="<br>";
-
-});
-
-resultado.innerHTML=html;
-
-}catch(e){
-
-resultado.innerHTML="Erro ao consultar o dicionário.";
-
-}
-
+function usarSugestao(p){
+  document.getElementById("palavra").value = p;
+  traduzir();
 }
 
 document.getElementById("palavra").addEventListener("keydown",function(e){
-
-if(e.key==="Enter"){
-
-buscar();
-
-}
-
+  if(e.key === "Enter"){
+    traduzir();
+  }
 });
 
+document.getElementById("palavra").addEventListener("input",function(){
+  const palavra = this.value.trim().toLowerCase();
+  const sugestoes = document.getElementById("sugestoes");
+
+  if(palavra.length < 2){
+    sugestoes.innerHTML = "";
+    return;
+  }
+
+  const parecidas = Object.keys(dicionario)
+    .filter(p => p.startsWith(palavra))
+    .slice(0,6);
+
+  sugestoes.innerHTML = parecidas.map(p =>
+    "<span class='tag' onclick=\"usarSugestao('" + p + "')\">" + p + "</span>"
+  ).join("");
+});
+
+carregar();
 </script>
 
 </body>
