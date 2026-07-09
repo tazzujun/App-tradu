@@ -3,72 +3,200 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>English Dictionary</title>
+
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:Arial}
-body{background:#0b0b0b;color:white;min-height:100vh;display:flex;align-items:center;justify-content:center;padding:20px}
-.app{width:100%;max-width:430px;background:#171717;border-radius:25px;padding:30px;border:1px solid #333}
-.logo{text-align:center;color:#FFD54A;font-size:32px;font-weight:bold}
-.sub{text-align:center;color:#888;margin:10px 0 30px}
-input,button{width:100%;padding:18px;border-radius:15px;font-size:18px}
-input{background:#111;border:1px solid #333;color:white}
-button{margin-top:15px;background:#FFD54A;color:#111;border:none;font-weight:bold}
-.resultado{margin-top:25px;background:#111;border:1px solid #333;border-radius:15px;padding:20px;line-height:1.5}
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+    font-family:Arial,Helvetica,sans-serif;
+}
+
+body{
+    background:#0d0d0d;
+    color:#fff;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    min-height:100vh;
+    padding:20px;
+}
+
+.container{
+    width:100%;
+    max-width:430px;
+    background:#1a1a1a;
+    border-radius:20px;
+    padding:30px;
+    border:1px solid #333;
+}
+
+h1{
+    text-align:center;
+    color:#ffd84d;
+    margin-bottom:10px;
+}
+
+p{
+    text-align:center;
+    color:#888;
+    margin-bottom:25px;
+}
+
+input{
+    width:100%;
+    padding:16px;
+    border-radius:12px;
+    border:1px solid #444;
+    background:#111;
+    color:white;
+    font-size:18px;
+}
+
+button{
+    width:100%;
+    margin-top:15px;
+    padding:16px;
+    border:none;
+    border-radius:12px;
+    background:#ffd84d;
+    color:#111;
+    font-size:18px;
+    font-weight:bold;
+    cursor:pointer;
+}
+
+button:hover{
+    opacity:.9;
+}
+
+#resultado{
+    margin-top:25px;
+    background:#111;
+    border:1px solid #333;
+    border-radius:12px;
+    padding:20px;
+    min-height:120px;
+    line-height:1.6;
+}
+
+small{
+    display:block;
+    margin-top:20px;
+    text-align:center;
+    color:#666;
+}
 </style>
+
 </head>
+
 <body>
 
-<div class="app">
-  <div class="logo">ENGLISH</div>
-  <div class="sub">Dicionário de Inglês</div>
+<div class="container">
 
-  <input id="palavra" placeholder="Digite uma palavra em inglês">
-  <button onclick="buscar()">BUSCAR</button>
+<h1>English</h1>
 
-  <div class="resultado" id="resultado">Digite uma palavra...</div>
+<p>Dicionário Inglês → Português</p>
+
+<input
+id="palavra"
+type="text"
+placeholder="Digite uma palavra">
+
+<button onclick="buscar()">
+Pesquisar
+</button>
+
+<div id="resultado">
+
+Digite uma palavra.
+
+</div>
+
+<small>Powered by Free Dictionary API</small>
+
 </div>
 
 <script>
+
 async function buscar(){
-  const palavra = document.getElementById("palavra").value.trim().toLowerCase();
-  const resultado = document.getElementById("resultado");
 
-  if(!palavra){
-    resultado.innerHTML = "Digite uma palavra.";
-    return;
-  }
+const palavra=document.getElementById("palavra").value.trim();
 
-  resultado.innerHTML = "Buscando...";
+const resultado=document.getElementById("resultado");
 
-  try{
-    const url = `https://api.dictionaryapi.dev/api/v2/entries/en/${palavra}`;
-    const resposta = await fetch(url);
-    const dados = await resposta.json();
+if(!palavra){
 
-    if(!Array.isArray(dados)){
-      resultado.innerHTML = "Palavra não encontrada.";
-      return;
-    }
+resultado.innerHTML="Digite uma palavra.";
 
-    const item = dados[0];
-    const significado = item.meanings[0].definitions[0].definition;
-    const exemplo = item.meanings[0].definitions[0].example || "Sem exemplo disponível.";
-    const audio = item.phonetics.find(p => p.audio)?.audio;
+return;
 
-    resultado.innerHTML = `
-      <strong>Palavra:</strong> ${item.word}<br><br>
-      <strong>Significado em inglês:</strong><br>${significado}<br><br>
-      <strong>Exemplo:</strong><br>${exemplo}<br><br>
-      ${audio ? `<button onclick="new Audio('${audio}').play()">OUVIR PRONÚNCIA</button>` : ""}
-    `;
-  }catch(e){
-    resultado.innerHTML = "Erro ao buscar a palavra.";
-  }
 }
 
-document.getElementById("palavra").addEventListener("keypress",function(e){
-  if(e.key==="Enter") buscar();
+resultado.innerHTML="Pesquisando...";
+
+try{
+
+const resposta=await fetch("https://api.dictionaryapi.dev/api/v2/entries/en/"+encodeURIComponent(palavra));
+
+if(!resposta.ok){
+
+resultado.innerHTML="Palavra não encontrada.";
+
+return;
+
+}
+
+const dados=await resposta.json();
+
+const item=dados[0];
+
+let html="";
+
+html+="<b>Palavra:</b> "+item.word+"<br><br>";
+
+if(item.phonetic){
+
+html+="<b>Pronúncia:</b> "+item.phonetic+"<br><br>";
+
+}
+
+item.meanings.forEach(function(m){
+
+html+="<b>"+m.partOfSpeech+"</b><br>";
+
+m.definitions.slice(0,2).forEach(function(d){
+
+html+="• "+d.definition+"<br>";
+
 });
+
+html+="<br>";
+
+});
+
+resultado.innerHTML=html;
+
+}catch(e){
+
+resultado.innerHTML="Erro ao consultar o dicionário.";
+
+}
+
+}
+
+document.getElementById("palavra").addEventListener("keydown",function(e){
+
+if(e.key==="Enter"){
+
+buscar();
+
+}
+
+});
+
 </script>
 
 </body>
